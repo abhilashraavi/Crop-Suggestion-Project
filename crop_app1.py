@@ -40,7 +40,7 @@ crop_images = {
     'coconut': 'https://raw.githubusercontent.com/abhilashraavi/Crop-Suggestion-Project/main/images/coconut.jpeg',
     'cotton': 'https://raw.githubusercontent.com/abhilashraavi/Crop-Suggestion-Project/main/images/cotton.jpeg',
     'jute': 'https://raw.githubusercontent.com/abhilashraavi/Crop-Suggestion-Project/main/images/jute.jpeg',
-    'coffee': 'https://raw.githubusercontent.com/abhilashraavi/Crop-Suggestion-Project/main/images/coffee.jpeg'
+    'coffee': 'https://raw.githubusercontent.com/abhilashraavi/Crop-Suggestion-Project/main/images/coffee.jpg'
 }
 
 # Streamlit page configuration
