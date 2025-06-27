@@ -161,7 +161,8 @@ if st.button("🌱 Suggest the Best Crop"):
 
             # Display crop image if available
             image_url = f"https://source.unsplash.com/600x400/?{prediction},crop"
-            st.image(image_url, caption=f"Suggested Crop: {prediction}", use_column_width=True)
+          st.image(image_url, caption=f"Suggested Crop: {prediction}", use_container_width=True)
+
 
         else:
             st.error("❌ Could not fetch weather. Please check the city name or your internet connection.")
