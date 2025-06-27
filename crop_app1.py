@@ -155,13 +155,14 @@ if st.button("🌱 Suggest the Best Crop"):
             st.write(f"🌡️ **Current Temperature:** {temp}°C")
             st.write(f"💧 **Current Humidity:** {humidity}%")
 
-            # Show estimated profit
+        # Show estimated profit
             profit = profit_estimates.get(prediction.lower(), 40000)
             st.write(f"💰 **Estimated Profit:** ₹{profit} per acre")
 
-            # Display crop image if available
+# Display crop image if available
             image_url = f"https://source.unsplash.com/600x400/?{prediction},crop"
-          st.image(image_url, caption=f"Suggested Crop: {prediction}", use_container_width=True)
+            st.image(image_url, caption=f"Suggested Crop: {prediction}", use_container_width=True)
+
 
 
         else:
