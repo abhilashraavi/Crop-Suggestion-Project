@@ -4,6 +4,7 @@ import joblib
 import requests
 from deep_translator import GoogleTranslator
 import time
+import os
 
 # Load the trained model
 model = joblib.load('crop_model.pkl')
@@ -16,6 +17,32 @@ profit_estimates = {
     'grapes': 75000, 'watermelon': 55000, 'muskmelon': 50000, 'apple': 80000,
     'orange': 70000, 'papaya': 60000, 'coconut': 65000, 'cotton': 45000,
     'jute': 40000, 'coffee': 85000
+}
+
+# Local image mapping (Make sure file names match these)
+crop_images = { 
+    'rice': 'images/rice.jpeg',
+    'maize': 'images/maize.jpeg',
+    'chickpea': 'images/chickpea.jpeg',
+    'kidneybeans': 'images/kidneybeans.jpeg',
+    'pigeonpeas': 'images/pigeonpeas.jpeg',
+    'mothbeans': 'images/mothbeans.jpeg',
+    'mungbean': 'images/mungbean.jpeg',
+    'blackgram': 'images/blackgram.jpeg',
+    'lentil': 'images/lentil.jpeg',
+    'pomegranate': 'images/pomegranate.jpeg',
+    'banana': 'images/banana.jpeg',
+    'mango': 'images/mango.jpeg',
+    'grapes': 'images/grapes.jpeg',
+    'watermelon': 'images/watermelon.jpeg',
+    'muskmelon': 'images/muskmelon.jpeg',
+    'apple': 'images/apple.jpeg',
+    'orange': 'images/orange.jpeg',
+    'papaya': 'images/papaya.jpeg',
+    'coconut': 'images/coconut.jpeg',
+    'cotton': 'images/cotton.jpeg',
+    'jute': 'images/jute.jpeg',
+    'coffee': 'images/coffee.jpeg'
 }
 
 # Weather API function
@@ -134,18 +161,11 @@ if st.button("🌱 Suggest the Best Crop"):
             profit = profit_estimates.get(prediction.lower(), 40000)
             st.write(f"💰 **Estimated Profit:** ₹{profit} per acre")
 
-            # Image display with fallback
-            image_url = f"https://source.unsplash.com/600x400/?{prediction},crop"
-            try:
-                response = requests.get(image_url, timeout=5)
-                if response.status_code == 200:
-                    st.image(image_url, caption=f"Suggested Crop: {prediction}", use_container_width=True)
-                else:
-                    st.image("https://via.placeholder.com/600x400.png?text=No+Image+Available",
-                             caption="No specific image found", use_container_width=True)
-            except:
-                st.image("https://via.placeholder.com/600x400.png?text=No+Image+Available",
-                         caption="No specific image found", use_container_width=True)
+            # Local image display
+            if prediction.lower() in crop_images:
+                st.image(crop_images[prediction.lower()], caption=f"Suggested Crop: {prediction}", use_container_width=True)
+            else:
+                st.image("https://via.placeholder.com/600x400.png?text=No+Image+Available", caption="No specific image found", use_container_width=True)
 
     else:
         st.error("❌ Could not fetch weather. Please check the city name or your internet connection.")
@@ -155,6 +175,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 # Footer
 st.markdown("---")
 st.caption("💡 Smart Solutions for Modern Agriculture | Multi-Language Support | Mobile Friendly")
+
 
 
 
