@@ -8,30 +8,14 @@ import time
 # Load the trained model
 model = joblib.load('crop_model.pkl')
 
-# Sample profit data (can be customized)
+# Profit estimation for each crop
 profit_estimates = {
-    'rice': 30000,
-    'maize': 25000,
-    'chickpea': 35000,
-    'kidneybeans': 40000,
-    'pigeonpeas': 45000,
-    'mothbeans': 28000,
-    'mungbean': 32000,
-    'blackgram': 37000,
-    'lentil': 36000,
-    'pomegranate': 80000,
-    'banana': 100000,
-    'mango': 90000,
-    'grapes': 120000,
-    'watermelon': 60000,
-    'muskmelon': 55000,
-    'apple': 150000,
-    'orange': 75000,
-    'papaya': 50000,
-    'coconut': 70000,
-    'cotton': 40000,
-    'jute': 30000,
-    'coffee': 100000
+    'rice': 50000, 'maize': 40000, 'chickpea': 45000, 'kidneybeans': 47000,
+    'pigeonpeas': 48000, 'mothbeans': 42000, 'mungbean': 43000, 'blackgram': 44000,
+    'lentil': 46000, 'pomegranate': 70000, 'banana': 60000, 'mango': 65000,
+    'grapes': 75000, 'watermelon': 55000, 'muskmelon': 50000, 'apple': 80000,
+    'orange': 70000, 'papaya': 60000, 'coconut': 65000, 'cotton': 45000,
+    'jute': 40000, 'coffee': 85000
 }
 
 # Weather API function
@@ -46,7 +30,7 @@ def get_weather(city, api_key):
 
 # Streamlit page configuration
 st.set_page_config(
-    page_title="🌾 Smart Crop Suggestion",
+    page_title="🌾 Smart Crop Recommendation",
     page_icon="🌱",
     layout="centered"
 )
@@ -59,31 +43,31 @@ st.markdown("""
         padding: 20px;
         border-radius: 10px;
     }
-    .stButton>button {
-        background-color: #FF4B4B;
+    .stButton > button {
+        background-color: #008080;
         color: white;
-        font-size: 18px;
+        font-size: 16px;
         border-radius: 10px;
-        padding: 12px 26px;
+        padding: 10px 24px;
+        border: none;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # App Title
 st.title("🌾 Smart Crop Suggestion System")
-st.caption("Multi-Language, Farmer-Friendly Crop Recommendation")
+st.caption("Multi-Language, Mobile-Friendly, Easy-to-Use Crop Recommendation App")
 
 st.divider()
 
 # Sidebar Inputs
 st.sidebar.header("📋 Enter Soil and Rainfall Details")
 
-# Manual input fields
-N = st.sidebar.number_input("Nitrogen (N) [0 - 140]", min_value=0, max_value=1000, value=90)
-P = st.sidebar.number_input("Phosphorous (P) [5 - 145]", min_value=0, max_value=1000, value=40)
-K = st.sidebar.number_input("Potassium (K) [5 - 205]", min_value=0, max_value=1000, value=45)
-ph = st.sidebar.number_input("Soil pH [3.5 - 9.5]", min_value=0.0, max_value=14.0, value=6.5)
-rainfall = st.sidebar.number_input("Rainfall (mm) [20 - 300]", min_value=0, max_value=1000, value=200)
+N = st.sidebar.number_input("Nitrogen (N) (0 - 140)", min_value=0, max_value=500, value=90)
+P = st.sidebar.number_input("Phosphorous (P) (5 - 145)", min_value=0, max_value=500, value=40)
+K = st.sidebar.number_input("Potassium (K) (5 - 205)", min_value=0, max_value=500, value=45)
+ph = st.sidebar.number_input("Soil pH (3.5 - 9.5)", min_value=0.0, max_value=14.0, value=6.5)
+rainfall = st.sidebar.number_input("Rainfall (mm) (20 - 300)", min_value=0, max_value=500, value=200)
 
 # City Input
 st.sidebar.header("🌍 Location and Language")
@@ -97,40 +81,31 @@ language = st.sidebar.selectbox(
     ["English", "Telugu", "Hindi", "Tamil", "Kannada", "Marathi", "French", "German", "Chinese", "Japanese", "Spanish", "Arabic", "Russian"]
 )
 
-# Language codes
+# Language codes for deep_translator
 language_codes = {
-    "English": "en",
-    "Telugu": "te",
-    "Hindi": "hi",
-    "Tamil": "ta",
-    "Kannada": "kn",
-    "Marathi": "mr",
-    "French": "fr",
-    "German": "de",
-    "Chinese": "zh-CN",
-    "Japanese": "ja",
-    "Spanish": "es",
-    "Arabic": "ar",
-    "Russian": "ru"
+    "English": "en", "Telugu": "te", "Hindi": "hi", "Tamil": "ta", "Kannada": "kn",
+    "Marathi": "mr", "French": "fr", "German": "de", "Chinese": "zh-CN", "Japanese": "ja",
+    "Spanish": "es", "Arabic": "ar", "Russian": "ru"
 }
 
 # Weather API Key
-api_key = "1958487648d4249a43c5c14d45756acc"  # Replace with your real API key
+api_key = "1958487648d4249a43c5c14d45756acc"  # Replace with your OpenWeatherMap API key
 
-# Main Interface
+# Main UI block
 st.markdown('<div class="main">', unsafe_allow_html=True)
+
 st.subheader("📊 Prediction Dashboard")
 
 if st.button("🌱 Suggest the Best Crop"):
-    # Check input ranges
-    if not (0 <= N <= 140 and 5 <= P <= 145 and 5 <= K <= 205 and 3.5 <= ph <= 9.5 and 20 <= rainfall <= 300):
-        st.error("❌ No crop can grow in this soil condition. Please enter valid input ranges.")
-    else:
-        with st.spinner('⏳ Fetching weather and predicting...'):
-            time.sleep(2)
-            temp, humidity = get_weather(city, api_key)
+    with st.spinner('⏳ Fetching weather and predicting...'):
+        time.sleep(2)
+        temp, humidity = get_weather(city, api_key)
 
-        if temp is not None:
+    if temp is not None:
+        # Input validation
+        if not (0 <= N <= 140 and 5 <= P <= 145 and 5 <= K <= 205 and 3.5 <= ph <= 9.5 and 20 <= rainfall <= 300):
+            st.error("❌ No crop can grow in this soil condition.")
+        else:
             input_data = pd.DataFrame([{
                 'N': N,
                 'P': P,
@@ -143,8 +118,8 @@ if st.button("🌱 Suggest the Best Crop"):
 
             prediction = model.predict(input_data)[0]
 
+            # Translation
             target_language = language_codes.get(language, "en")
-
             if language != "English":
                 translated_crop = GoogleTranslator(source='en', target=target_language).translate(prediction)
                 st.success(f"✅ Recommended Crop (English): {prediction}")
@@ -155,24 +130,32 @@ if st.button("🌱 Suggest the Best Crop"):
             st.write(f"🌡️ **Current Temperature:** {temp}°C")
             st.write(f"💧 **Current Humidity:** {humidity}%")
 
-        # Show estimated profit
+            # Estimated Profit
             profit = profit_estimates.get(prediction.lower(), 40000)
             st.write(f"💰 **Estimated Profit:** ₹{profit} per acre")
 
-# Display crop image if available
+            # Image display with fallback
             image_url = f"https://source.unsplash.com/600x400/?{prediction},crop"
-            st.image(image_url, caption=f"Suggested Crop: {prediction}", use_container_width=True)
+            try:
+                response = requests.get(image_url, timeout=5)
+                if response.status_code == 200:
+                    st.image(image_url, caption=f"Suggested Crop: {prediction}", use_container_width=True)
+                else:
+                    st.image("https://via.placeholder.com/600x400.png?text=No+Image+Available",
+                             caption="No specific image found", use_container_width=True)
+            except:
+                st.image("https://via.placeholder.com/600x400.png?text=No+Image+Available",
+                         caption="No specific image found", use_container_width=True)
 
-
-
-        else:
-            st.error("❌ Could not fetch weather. Please check the city name or your internet connection.")
+    else:
+        st.error("❌ Could not fetch weather. Please check the city name or your internet connection.")
 
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
-st.caption("🌱 Smart Farming | Multi-Language Support | Mobile Friendly | Designed for Everyone")
+st.caption("💡 Smart Solutions for Modern Agriculture | Multi-Language Support | Mobile Friendly")
+
 
 
 
